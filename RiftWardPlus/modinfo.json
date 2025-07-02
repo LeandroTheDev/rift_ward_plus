@@ -1,0 +1,13 @@
+{
+    "type": "code",
+    "modid": "riftwardplus",
+    "name": "RiftWardPlus",
+    "authors": [
+        "BoboDev"
+    ],
+    "description": "Add two new items for discovering and finding Rift Wards",
+    "version": "1.0.0",
+    "dependencies": {
+        "game": ""
+    }
+}

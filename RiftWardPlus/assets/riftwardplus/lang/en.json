@@ -1,0 +1,17 @@
+{
+    "riftwardplus:block-riftwarddetector": "Rift Ward Detector",
+    "riftwardplus:block-riftwardpinger": "Rift Ward Pinger",
+    "riftwardplus:scanning-riftwards": "Scanning Rift Wards...",
+    "riftwardplus:available-riftwards": "Some Rift Wards have been found, distances:",
+    "riftwardplus:available-riftward": "Rift Ward Distance: {0}",
+    "riftwardplus:disabled-riftward": "Rift Ward is Disabled",
+    "riftwardplus:empty-riftward": "Rift Ward not Set",
+    "riftwardplus:north": " North",
+    "riftwardplus:south": " South",
+    "riftwardplus:east": " East",
+    "riftwardplus:west": " West",
+    "riftwardplus:northeast": " Northeast",
+    "riftwardplus:northwest": " Northwest",
+    "riftwardplus:southeast": " Southeast",
+    "riftwardplus:southwest": " Southwest"
+}

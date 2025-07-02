@@ -1,0 +1,13 @@
+{
+    "detectorTickrate": 5000,
+    "detectorOnlyActiveRiftWards": false,
+    "detectorRadius": 20,
+    "detectorYRadius": 5,
+    "detectorMillisecondsSleepBetweenBlockCheck": 5,
+    "detectorMaxScannedRiftWards": 1,
+
+    "pingerOnlyActiveRiftWards": false,
+    "compassRose": true,
+
+    "enableExtendedLogs": false
+}
