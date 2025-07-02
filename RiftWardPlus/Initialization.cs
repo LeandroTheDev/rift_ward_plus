@@ -37,6 +37,16 @@ public class Initialization : ModSystem
         api.RegisterBlockClass("BlockRiftWardPinger", typeof(BlockRiftWardPinger));
 
         overwriteRiftWard.OverwriteNativeFunctions(api);
+
+        BlockEntityRiftWardDetector.MaxDetectorBlocksToScan = BlockEntityRiftWardDetector.EstimateTotalBlocksToScan(
+            Configuration.detectorRadius, Configuration.detectorYRadius, Configuration.detectorRadius);
+
+        if (Configuration.ENABLERADIUSBLOCKCHECK)
+        {
+            Debug.LogWarn("----------------------------------------------------------");
+            Debug.LogWarn("ENABLERADIUSBLOCKCHECK IS ENABLED THIS WILL DELETE THE SCANNED BLOCKS SO YOU CAN VIEW WHAT THE DETECTOR IS SCANNING");
+            Debug.LogWarn("----------------------------------------------------------");
+        }
     }
 
     public override void AssetsLoaded(ICoreAPI api)

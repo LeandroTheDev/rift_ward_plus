@@ -89,6 +89,7 @@ public static class Configuration
     public static bool detectorOnlyActiveRiftWards = false;
     public static bool pingerOnlyActiveRiftWards = false;
     public static bool compassRose = true;
+    public static bool ENABLERADIUSBLOCKCHECK = false;
     public static bool enableExtendedLogs = false;
 
     public static void UpdateBaseConfigurations(ICoreAPI api)
@@ -148,6 +149,13 @@ public static class Configuration
                 else if (value is not bool) Debug.LogError($"CONFIGURATION ERROR: compassRose is not boolean is {value.GetType()}");
                 else compassRose = (bool)value;
             else Debug.LogError("CONFIGURATION ERROR: compassRose not set");
+        }
+        { //ENABLERADIUSBLOCKCHECK
+            if (baseConfigs.TryGetValue("ENABLERADIUSBLOCKCHECK", out object value))
+                if (value is null) Debug.LogError("CONFIGURATION ERROR: ENABLERADIUSBLOCKCHECK is null");
+                else if (value is not bool) Debug.LogError($"CONFIGURATION ERROR: ENABLERADIUSBLOCKCHECK is not boolean is {value.GetType()}");
+                else ENABLERADIUSBLOCKCHECK = (bool)value;
+            else Debug.LogError("CONFIGURATION ERROR: ENABLERADIUSBLOCKCHECK not set");
         }
         { //enableExtendedLogs
             if (baseConfigs.TryGetValue("enableExtendedLogs", out object value))

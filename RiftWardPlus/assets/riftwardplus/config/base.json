@@ -1,5 +1,5 @@
 {
-    "detectorTickrate": 5000,
+    "detectorTickrate": 15000,
     "detectorOnlyActiveRiftWards": false,
     "detectorRadius": 20,
     "detectorYRadius": 5,
@@ -8,6 +8,8 @@
 
     "pingerOnlyActiveRiftWards": false,
     "compassRose": true,
+
+    "ENABLERADIUSBLOCKCHECK": false,
 
     "enableExtendedLogs": false
 }

@@ -12,18 +12,21 @@ namespace RiftWardPlus.Shared;
 
 public class BlockEntityRiftWardDetector : BlockEntity
 {
+    public static uint MaxDetectorBlocksToScan { get; internal set; } = 0;
+
     private long? refreshRiftWardsTickListener = null;
 
     // List of positions and distances of rift wards
     private List<KeyValuePair<string, double>> riftWardDistances = [];
     private uint blocksScanned = 0;
-    private uint totalBlocksToScan = 0;
 
     private bool alreadyScanning = false;
 
     public override void Initialize(ICoreAPI api)
     {
         base.Initialize(api);
+        if (api.Side == EnumAppSide.Client) return;
+
         Debug.LogDebug("Block Initialized");
         refreshRiftWardsTickListener = RegisterGameTickListener(RefreshRiftWards, Configuration.detectorTickrate, 0);
     }
@@ -36,7 +39,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
             UnregisterGameTickListener((long)refreshRiftWardsTickListener);
     }
 
-    private static uint EstimateTotalBlocksToScan(int radiusX, int radiusY, int radiusZ)
+    public static uint EstimateTotalBlocksToScan(int radiusX, int radiusY, int radiusZ)
     {
         uint total = 0;
         int maxRadius = Math.Max(Math.Max(radiusX, radiusY), radiusZ);
@@ -76,7 +79,6 @@ public class BlockEntityRiftWardDetector : BlockEntity
         int radiusZ = Configuration.detectorRadius;
 
         blocksScanned = 0;
-        totalBlocksToScan = EstimateTotalBlocksToScan(radiusX, radiusY, radiusZ);
 
         alreadyScanning = true;
         // Running on secondary thread to not overload server with big radius
@@ -119,6 +121,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
 
                             BlockPos checkPos = origin.AddCopy(dx, dy, dz);
                             Block block = Api.World.BlockAccessor.GetBlock(checkPos);
+
                             if (block.Id == targetBlockId)
                             {
                                 if (Configuration.detectorOnlyActiveRiftWards &&
@@ -131,17 +134,23 @@ public class BlockEntityRiftWardDetector : BlockEntity
                                 Debug.LogDebug($"Rift Ward Finded in {key}");
                                 distances.Add(new($"{checkPos.X},{checkPos.Y},{checkPos.Z}", checkPos.DistanceTo(origin)));
                             }
+                            else if (Configuration.ENABLERADIUSBLOCKCHECK && block.Code.ToString() != "riftwardplus:riftwarddetector")
+                            {
+                                Api.World.BlockAccessor.SetBlock(0, checkPos);
+                            }
 
                             if (distances.Count >= Configuration.detectorMaxScannedRiftWards)
                             {
                                 Debug.LogDebug("Scanning rift finded max rift wards...");
                                 riftWardDistances = distances;
                                 alreadyScanning = false;
+                                MarkDirty();
                                 return;
                             }
 
                             blocksScanned++;
                             await Task.Delay(Configuration.detectorMillisecondsSleepBetweenBlockCheck);
+                            MarkDirty();
                         }
                     }
                 }
@@ -149,6 +158,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
 
             riftWardDistances = distances;
             alreadyScanning = false;
+            MarkDirty();
 
             Debug.LogDebug("Scanning rift wards finish!!");
         });
@@ -163,7 +173,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
             dsc.AppendLine(Lang.Get("riftwardplus:scanning-riftwards"));
             if (Configuration.enableExtendedLogs)
             {
-                dsc.AppendLine($"{blocksScanned}/{totalBlocksToScan} blocks scanned");
+                dsc.AppendLine($"{blocksScanned}/{MaxDetectorBlocksToScan} blocks scanned");
             }
             return;
         }
@@ -191,6 +201,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
     public override void ToTreeAttributes(ITreeAttribute tree)
     {
         tree.SetString("riftWardDistances", JsonSerializer.Serialize(riftWardDistances));
+        tree.SetInt("riftWardBlocksScanned", (int)blocksScanned);
 
         base.ToTreeAttributes(tree);
     }
@@ -198,9 +209,11 @@ public class BlockEntityRiftWardDetector : BlockEntity
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
     {
         string riftWardDistancesString = tree.GetString("riftWardDistances", null);
+        int blocksScannedInt = tree.GetInt("riftWardBlocksScanned", 0);
         if (string.IsNullOrEmpty(riftWardDistancesString)) return;
 
         riftWardDistances = JsonSerializer.Deserialize<List<KeyValuePair<string, double>>>(riftWardDistancesString);
+        blocksScanned = (uint)blocksScannedInt;
 
         base.FromTreeAttributes(tree, worldAccessForResolve);
     }
