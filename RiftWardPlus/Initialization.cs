@@ -8,7 +8,7 @@ namespace RiftWardPlus;
 
 public class Initialization : ModSystem
 {
-    private OverwriteRiftWard overwriteRiftWard = new();
+    private readonly OverwriteRiftWard overwriteRiftWard = new();
 
     public override void StartServerSide(ICoreServerAPI api)
     {
@@ -33,12 +33,15 @@ public class Initialization : ModSystem
         base.Start(api);
         Debug.LoadLogger(api.Logger);
         api.RegisterBlockEntityClass("BlockEntityRiftWardDetector", typeof(BlockEntityRiftWardDetector));
+        api.RegisterBlockEntityClass("BlockEntityRiftPingerDetector", typeof(BlockEntityRiftPingerDetector));
         api.RegisterBlockEntityClass("BlockEntityRiftWardPinger", typeof(BlockEntityRiftWardPinger));
         api.RegisterBlockClass("BlockRiftWardPinger", typeof(BlockRiftWardPinger));
 
         overwriteRiftWard.OverwriteNativeFunctions(api);
 
         BlockEntityRiftWardDetector.MaxDetectorBlocksToScan = BlockEntityRiftWardDetector.EstimateTotalBlocksToScan(
+            Configuration.detectorRadius, Configuration.detectorYRadius, Configuration.detectorRadius);
+        BlockEntityRiftPingerDetector.MaxDetectorBlocksToScan = BlockEntityRiftPingerDetector.EstimateTotalBlocksToScan(
             Configuration.detectorRadius, Configuration.detectorYRadius, Configuration.detectorRadius);
 
         if (Configuration.ENABLERADIUSBLOCKCHECK)

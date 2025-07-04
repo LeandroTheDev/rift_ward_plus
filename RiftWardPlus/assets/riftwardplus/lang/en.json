@@ -1,8 +1,11 @@
 {
     "riftwardplus:block-riftwarddetector": "Rift Ward Detector",
+    "riftwardplus:block-riftpingerdetector": "Rift Ward Pinger Detector",
     "riftwardplus:block-riftwardpinger": "Rift Ward Pinger",
     "riftwardplus:scanning-riftwards": "Scanning Rift Wards...",
+    "riftwardplus:scanning-riftpinger": "Scanning Rift Ward Pingers...",
     "riftwardplus:available-riftwards": "Some Rift Wards have been found, distances:",
+    "riftwardplus:available-riftpingers": "Some Rift Ward Pingers have been found, distances:",
     "riftwardplus:available-riftward": "Rift Ward Distance: {0}",
     "riftwardplus:disabled-riftward": "Rift Ward is Disabled",
     "riftwardplus:empty-riftward": "Rift Ward not Set",
