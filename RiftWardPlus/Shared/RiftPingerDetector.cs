@@ -41,33 +41,16 @@ public class BlockEntityRiftPingerDetector : BlockEntity
 
     public static uint EstimateTotalBlocksToScan(int radiusX, int radiusY, int radiusZ)
     {
-        uint total = 0;
-        int maxRadius = Math.Max(Math.Max(radiusX, radiusY), radiusZ);
+        double a = radiusX;
+        double b = radiusY;
+        double c = radiusZ;
 
-        for (int r = 1; r <= maxRadius; r++)
-        {
-            for (int dx = -r; dx <= r; dx++)
-            {
-                for (int dy = -r; dy <= r; dy++)
-                {
-                    for (int dz = -r; dz <= r; dz++)
-                    {
-                        if (Math.Abs(dx) > radiusX || Math.Abs(dy) > radiusY || Math.Abs(dz) > radiusZ)
-                            continue;
+        double outer = 4.0 / 3.0 * Math.PI * a * b * c;
+        double inner = 4.0 / 3.0 * Math.PI * Math.Max(0, a - 1) * Math.Max(0, b - 1) * Math.Max(0, c - 1);
 
-                        double dist = Math.Sqrt(dx * dx + dy * dy + dz * dz);
-                        if (dist < r - 1 || dist > r)
-                            continue;
-
-                        total++;
-                    }
-                }
-            }
-        }
-
-        return total;
+        return (uint)Math.Ceiling(outer - inner);
     }
-
+    
     private void RefreshRiftWards(float obj)
     {
         if (alreadyScanning) return;
