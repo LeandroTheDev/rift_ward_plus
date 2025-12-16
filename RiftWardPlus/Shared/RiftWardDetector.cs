@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -107,8 +108,7 @@ public class BlockEntityRiftWardDetector : BlockEntity
 
                             if (block.Id == targetBlockId)
                             {
-                                if (Configuration.detectorOnlyActiveRiftWards &&
-                                    !RiftWardData.activeRiftsWards.Contains(key))
+                                if (Configuration.detectorOnlyActiveRiftWards && RiftWardData.activeRiftsWards.FirstOrDefault(data => data.uniqueid == key, null) == null)
                                 {
                                     Debug.LogDebug($"Rift Ward Finded in {key}, BUT is disabled");
                                     continue;
@@ -167,12 +167,15 @@ public class BlockEntityRiftWardDetector : BlockEntity
             string[] riftWardCoords = riftWardPosDistance.Key.Split(",");
 
             if (Configuration.detectorOnlyActiveRiftWards)
-                if (!RiftWardData.activeRiftsWards.Contains($"{riftWardCoords[0]},{riftWardCoords[1]},{riftWardCoords[2]}"))
+            {
+                string uniquePosition = $"{riftWardCoords[0]},{riftWardCoords[1]},{riftWardCoords[2]}";
+                if (RiftWardData.activeRiftsWards.FirstOrDefault(data => data.uniqueid == uniquePosition, null) == null)
                 {
                     Debug.LogDebug("Looking at deactivated rift, ignoring...");
                     dsc.AppendLine(Lang.Get("riftwardplus:disabled-riftward"));
                     return;
                 }
+            }
 
             if (Configuration.compassRose)
                 dsc.AppendLine($"{(uint)riftWardPosDistance.Value}{Lang.Get(RiftWardData.GetCompassRoseOrientationBaseOnTwoPositions(Pos, new((int)double.Parse(riftWardCoords[0]), (int)double.Parse(riftWardCoords[1]), (int)double.Parse(riftWardCoords[2]))))}");

@@ -24,7 +24,7 @@ public class Initialization : ModSystem
             // Load active rift
             byte[] data = api.WorldManager.SaveGame.GetData("RiftWardData_ActiveRiftWards");
             if (data is null) return;
-            RiftWardData.activeRiftsWards = SerializerUtil.Deserialize<List<string>>(data);
+            RiftWardData.activeRiftsWards = SerializerUtil.Deserialize<List<RiftWardInfo>>(data);
         }
     }
 
@@ -33,9 +33,11 @@ public class Initialization : ModSystem
         base.Start(api);
         Debug.LoadLogger(api.Logger);
         api.RegisterBlockEntityClass("BlockEntityRiftWardDetector", typeof(BlockEntityRiftWardDetector));
+        api.RegisterBlockEntityClass("BlockEntityRiftWardSimpleDetector", typeof(BlockEntityRiftWardSimpleDetector));
         api.RegisterBlockEntityClass("BlockEntityRiftPingerDetector", typeof(BlockEntityRiftPingerDetector));
         api.RegisterBlockEntityClass("BlockEntityRiftWardPinger", typeof(BlockEntityRiftWardPinger));
         api.RegisterBlockClass("BlockRiftWardPinger", typeof(BlockRiftWardPinger));
+        api.RegisterBlockClass("BlockRiftWardSimpleDetector", typeof(BlockRiftWardSimpleDetector));
 
         overwriteRiftWard.OverwriteNativeFunctions(api);
 

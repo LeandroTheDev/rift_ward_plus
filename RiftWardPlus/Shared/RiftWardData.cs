@@ -6,7 +6,7 @@ namespace RiftWardPlus.Shared;
 
 static internal class RiftWardData
 {
-    static internal List<string> activeRiftsWards = [];
+    static internal List<RiftWardInfo> activeRiftsWards = [];
 
     static internal string GetCompassRoseOrientationBaseOnTwoPositions(BlockPos pos1, BlockPos pos2)
     {
@@ -46,5 +46,13 @@ static internal class RiftWardData
         int index = (int)Math.Round(angleDeg / 22.5) % 16;
         return directions[index];
     }
+}
 
+internal class RiftWardInfo
+{
+    public int x = 0;
+    public int y = 0;
+    public int z = 0;
+    public string uniqueid = "";
+    public string placedBy = null;
 }

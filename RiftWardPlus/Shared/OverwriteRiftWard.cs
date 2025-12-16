@@ -1,3 +1,4 @@
+using System.Linq;
 using HarmonyLib;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
@@ -49,8 +50,15 @@ class OverwriteRiftWard
         if (hasFuel && __instance.Api != null)
         {
             string uniquePosition = $"{__instance.Pos.X},{__instance.Pos.Y},{__instance.Pos.Z}";
-            if (RiftWardData.activeRiftsWards.Contains(uniquePosition)) return;
-            else RiftWardData.activeRiftsWards.Add(uniquePosition);
+            if (RiftWardData.activeRiftsWards.FirstOrDefault(data => data.uniqueid == uniquePosition, null) != null) return;
+            else RiftWardData.activeRiftsWards.Add(new()
+            {
+                x = __instance.Pos.X,
+                y = __instance.Pos.Y,
+                z = __instance.Pos.Z,
+                uniqueid = uniquePosition,
+                placedBy = __instance.Api.World.NearestPlayer(__instance.Pos.X, __instance.Pos.Y, __instance.Pos.Z)?.PlayerUID
+            });
 
             Debug.LogDebug($"New rift ward activated in: {uniquePosition}");
         }
@@ -63,7 +71,9 @@ class OverwriteRiftWard
         if (__instance.Api?.Side != EnumAppSide.Server) return;
 
         string uniquePosition = $"{__instance.Pos.X},{__instance.Pos.Y},{__instance.Pos.Z}";
-        RiftWardData.activeRiftsWards.Remove(uniquePosition);
+        RiftWardInfo riftWardInfo = RiftWardData.activeRiftsWards.FirstOrDefault(data => data.uniqueid == uniquePosition, null);
+        if (riftWardInfo == null) return;
+        RiftWardData.activeRiftsWards.Remove(riftWardInfo);
 
         Debug.LogDebug($"Rift ward deactivated in: {uniquePosition}");
     }
